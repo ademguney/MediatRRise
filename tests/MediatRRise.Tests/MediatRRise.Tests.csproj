@@ -20,7 +20,6 @@
 
   <ItemGroup>
     <Folder Include="DI\" />
-    <Folder Include="Notifications\" />
     <Folder Include="Unit\" />
   </ItemGroup>
 
