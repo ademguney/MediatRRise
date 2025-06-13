@@ -22,9 +22,11 @@ public interface IMediator
     Task Send(IRequest request, CancellationToken cancellationToken = default);
 
     /// <summary>
-    /// Publishes a notification to all matching handlers.
+    /// Publishes a notification with type safety.
     /// </summary>
-    /// <param name="notification">The notification instance.</param>
-    /// <param name="cancellationToken">Cancellation support.</param>
-    Task Publish(INotification notification, CancellationToken cancellationToken = default);
+    /// <typeparam name="TNotification">Notification type.</typeparam>
+    /// <param name="notification">Notification instance.</param>
+    /// <param name="cancellationToken">Cancellation token.</param>
+    Task Publish<TNotification>(TNotification notification, CancellationToken cancellationToken = default)
+        where TNotification : INotification;
 }
