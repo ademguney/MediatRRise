@@ -19,11 +19,15 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Integration\" />
     <Folder Include="DI\" />
-    <Folder Include="TestFixtures\" />
     <Folder Include="Notifications\" />
     <Folder Include="Unit\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\src\MediatRRise.Behaviors\MediatRRise.Behaviors.csproj" />
+    <ProjectReference Include="..\..\src\MediatRRise.Core\MediatRRise.Core.csproj" />
+    <ProjectReference Include="..\..\src\MediatRRise.Infrastructure\MediatRRise.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>
