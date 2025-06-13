@@ -7,7 +7,7 @@ Whether you're building a modular monolith, implementing CQRS, or introducing do
 
 ---
 
-### ✨ Features
+## ✨ Features
 
 - ✅ `IRequest<T>` / `IRequestHandler<T, R>` based command & query handling
 - ✅ `INotification` & multi-handler pub-sub pattern
@@ -19,7 +19,7 @@ Whether you're building a modular monolith, implementing CQRS, or introducing do
 
 ---
 
-### 📦 Installation
+## 📦 Installation
 
 ```bash
 dotnet add package MediatRRise
