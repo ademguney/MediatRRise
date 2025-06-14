@@ -8,7 +8,7 @@ namespace MediatRRise.Infrastructure.Implemantation;
 /// Default implementation of the IMediator interface.
 /// Resolves and executes appropriate handlers for requests and notification.
 /// </summary>
-internal class Mediator(IServiceProvider serviceProvider) : IMediator
+public class Mediator(IServiceProvider serviceProvider) : IMediator
 {
     private readonly PipelineExecutor _pipelineExecutor = new(serviceProvider);
 
@@ -38,17 +38,13 @@ internal class Mediator(IServiceProvider serviceProvider) : IMediator
     /// <returns>The response returned by the handler.</returns>
     public Task<TResponse> Send<TResponse>(IRequest<TResponse> request, CancellationToken cancellationToken = default)
     {
-        var handler = serviceProvider.GetRequiredService<IRequestHandler<IRequest<TResponse>, TResponse>>();
+        var handlerType = typeof(IRequestHandler<,>).MakeGenericType(request.GetType(), typeof(TResponse));
+        dynamic handler = serviceProvider.GetRequiredService(handlerType);
 
-        // Wrapper to pass to pipeline executor
-        Task<TResponse> HandlerFunc(IRequest<TResponse> req, CancellationToken token) =>
-            handler.Handle(req, token);
+        Task<TResponse> HandlerFunc(IRequest<TResponse> _, CancellationToken token) =>
+            handler.Handle((dynamic)request, token);
 
-        return _pipelineExecutor.Execute(
-            request,
-            cancellationToken,
-            HandlerFunc
-        );
+        return _pipelineExecutor.Execute(request, cancellationToken, HandlerFunc);
     }
 
     /// <summary>

@@ -14,11 +14,11 @@ public class LoggingBehavior<TRequest, TResponse> : IPipelineBehavior<TRequest, 
         RequestHandlerDelegate<TResponse> next,
         CancellationToken cancellationToken)
     {
-        Console.WriteLine($"[Logging] Handling request: {typeof(TRequest).Name}");
+        Console.WriteLine($"[Logging] Handling request: {request.GetType().Name}");
 
         var response = await next();
 
-        Console.WriteLine($"[Logging] Handled request: {typeof(TRequest).Name}");
+        Console.WriteLine($"[Logging] Handled request: {request.GetType().Name}");
 
         return response;
     }
