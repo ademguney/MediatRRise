@@ -14,7 +14,8 @@ public static class AddMediatRRisePipelineExtensions
             .AddLoggingBehavior()
             .AddExceptionHandlingBehavior()
             .AddValidationBehavior()
-            .AddRetryBehavior();
+            .AddRetryBehavior()
+            .AddPerformanceBehavior();
 
         return services;
     }
