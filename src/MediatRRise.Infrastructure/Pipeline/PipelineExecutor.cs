@@ -3,8 +3,21 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace MediatRRise.Infrastructure.Pipeline;
 
+/// <summary>
+/// Executes a request through a pipeline of behaviors.
+/// </summary>
+/// <param name="serviceProvider"></param>
 internal class PipelineExecutor(IServiceProvider serviceProvider)
 {
+    /// <summary>
+    /// Executes a request through the pipeline of behaviors and returns a response.
+    /// </summary>
+    /// <typeparam name="TRequest"></typeparam>
+    /// <typeparam name="TResponse"></typeparam>
+    /// <param name="request"></param>
+    /// <param name="cancellationToken"></param>
+    /// <param name="handlerFunc"></param>
+    /// <returns></returns>
     public Task<TResponse> Execute<TRequest, TResponse>(
         TRequest request,
         CancellationToken cancellationToken,

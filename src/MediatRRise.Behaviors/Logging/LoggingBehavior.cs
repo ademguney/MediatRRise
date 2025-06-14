@@ -10,6 +10,13 @@ namespace MediatRRise.Behaviors.Logging;
 /// <typeparam name="TResponse">Response type.</typeparam>
 public class LoggingBehavior<TRequest, TResponse>(ILogger<LoggingBehavior<TRequest, TResponse>> logger) : IPipelineBehavior<TRequest, TResponse>
 {
+    /// <summary>
+    /// Handles the request by logging before and after the next step in the pipeline is executed.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="next"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,

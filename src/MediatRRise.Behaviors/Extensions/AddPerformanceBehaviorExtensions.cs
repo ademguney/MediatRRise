@@ -10,7 +10,7 @@ namespace MediatRRise.Behaviors.Extensions;
 public static class AddPerformanceBehaviorExtensions
 {
     /// <summary>
-    /// Adds performance logging behavior to the MediatRRise pipeline.
+    /// Registers the performance behavior into the MediatRRise pipeline.
     /// </summary>
     public static IServiceCollection AddPerformanceBehavior(this IServiceCollection services)
     {

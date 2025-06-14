@@ -10,6 +10,11 @@ namespace MediatRRise.Behaviors.Extensions;
 /// </summary>
 public static class AddExceptionHandlingBehaviorExtensions
 {
+    /// <summary>
+    /// Registers <see cref="ExceptionHandlingBehavior{TRequest, TResponse}"/> into the MediatRRise pipeline.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
     public static IServiceCollection AddExceptionHandlingBehavior(this IServiceCollection services)
     {
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(ExceptionHandlingBehavior<,>));

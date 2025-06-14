@@ -12,6 +12,13 @@ public class PerformanceBehavior<TRequest, TResponse>(
     int thresholdMs = 500) : IPipelineBehavior<TRequest, TResponse>
     where TRequest : IRequest<TResponse>
 {
+    /// <summary>
+    /// Handles the request by measuring its execution time and logging if it exceeds the threshold.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="next"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,

@@ -10,6 +10,11 @@ namespace MediatRRise.Behaviors.Extensions;
 /// </summary>
 public static class AddRetryBehaviorExtensions
 {
+    /// <summary>
+    /// Registers <see cref="RetryBehavior{TRequest, TResponse}"/> into the pipeline.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
     public static IServiceCollection AddRetryBehavior(this IServiceCollection services)
     {
         services.AddScoped(typeof(IPipelineBehavior<,>), typeof(RetryBehavior<,>));

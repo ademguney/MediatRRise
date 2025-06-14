@@ -16,6 +16,13 @@ public class RetryBehavior<TRequest, TResponse>(int retryCount = 3, int delayMil
         typeof(HttpRequestException)
     ];
 
+    /// <summary>
+    /// Handles the request and retries on transient exceptions.
+    /// </summary>
+    /// <param name="request"></param>
+    /// <param name="next"></param>
+    /// <param name="cancellationToken"></param>
+    /// <returns></returns>
     public async Task<TResponse> Handle(
         TRequest request,
         RequestHandlerDelegate<TResponse> next,

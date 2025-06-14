@@ -8,6 +8,11 @@ namespace MediatRRise.Behaviors.Extensions;
 /// </summary>
 public static class AddMediatRRisePipelineExtensions
 {
+    /// <summary>
+    /// Adds the MediatRRise pipeline behaviors to the service collection.
+    /// </summary>
+    /// <param name="services"></param>
+    /// <returns></returns>
     public static IServiceCollection AddMediatRRisePipeline(this IServiceCollection services)
     {
         services
