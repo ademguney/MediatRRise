@@ -5,29 +5,36 @@ using Microsoft.Extensions.DependencyInjection;
 namespace MediatRRise.Infrastructure.Extensions;
 
 /// <summary>
-/// Extension methods for registering MediatR Rise services into the DI container.
+/// Extension methods for registering MediatRRise services into the dependency injection container.
 /// </summary>
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Original AddMediator with marker type(s).
+    /// Registers IMediator and all IRequestHandler/INotificationHandler implementations
+    /// from the assemblies of the specified marker types.
     /// </summary>
+    /// <param name="services">The service collection to register with.</param>
+    /// <param name="markerTypes">Marker types used to identify target assemblies.</param>
+    /// <returns>The updated IServiceCollection.</returns>
     public static IServiceCollection AddMediator(this IServiceCollection services, params Type[] markerTypes)
     {
         var assemblies = markerTypes.Select(t => t.Assembly).Distinct().ToArray();
-
         return services.AddMediator(cfg => cfg.RegisterServicesFromAssemblies(assemblies));
     }
 
     /// <summary>
-    /// New overload to support MediatR-style registration from assemblies.
+    /// Registers IMediator and all IRequestHandler/INotificationHandler implementations
+    /// using the specified configuration options.
     /// </summary>
+    /// <param name="services">The service collection to register with.</param>
+    /// <param name="optionsBuilder">An action to configure assembly scanning options.</param>
+    /// <returns>The updated IServiceCollection.</returns>
     public static IServiceCollection AddMediator(this IServiceCollection services, Action<MediatRRiseOptions> optionsBuilder)
     {
         var options = new MediatRRiseOptions();
         optionsBuilder.Invoke(options);
 
-        services.AddSingleton<IMediator, Mediator>();
+        services.AddScoped<IMediator, Mediator>();
 
         foreach (var assembly in options.Assemblies.Distinct())
         {
@@ -36,9 +43,9 @@ public static class ServiceCollectionExtensions
             var requestHandlers = types
                 .Where(t => !t.IsAbstract && !t.IsInterface)
                 .SelectMany(t => t.GetInterfaces()
-                    .Where(i => i.IsGenericType && (
-                        i.GetGenericTypeDefinition() == typeof(IRequestHandler<,>) ||
-                        i.GetGenericTypeDefinition() == typeof(IRequestHandler<>)))
+                    .Where(i => i.IsGenericType &&
+                        (i.GetGenericTypeDefinition() == typeof(IRequestHandler<,>) ||
+                         i.GetGenericTypeDefinition() == typeof(IRequestHandler<>)))
                     .Select(i => new { Service = i, Implementation = t }));
 
             var notificationHandlers = types
