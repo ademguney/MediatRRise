@@ -15,6 +15,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediatRRise.Behaviors", "sr
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediatRRise.Tests", "tests\MediatRRise.Tests\MediatRRise.Tests.csproj", "{35F5FC67-08AB-46B4-8B12-843CC4B7ADA5}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "nuget_pack", "nuget_pack", "{FEB9C6F3-403A-40F5-B9CC-9CF294B1338B}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MediatRRise", "nuget_pack\MediatRRise\MediatRRise.csproj", "{5C10F1EA-40DC-45F4-89B6-B7F940E9187C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -37,6 +41,10 @@ Global
 		{35F5FC67-08AB-46B4-8B12-843CC4B7ADA5}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{35F5FC67-08AB-46B4-8B12-843CC4B7ADA5}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{35F5FC67-08AB-46B4-8B12-843CC4B7ADA5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5C10F1EA-40DC-45F4-89B6-B7F940E9187C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5C10F1EA-40DC-45F4-89B6-B7F940E9187C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5C10F1EA-40DC-45F4-89B6-B7F940E9187C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5C10F1EA-40DC-45F4-89B6-B7F940E9187C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -46,6 +54,7 @@ Global
 		{A02D7E03-576E-4BF9-BD05-5D119799B99F} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{88B41E28-3B02-4E28-81E0-91062399729C} = {02EA681E-C7D8-13C7-8484-4AC65E1B71E8}
 		{35F5FC67-08AB-46B4-8B12-843CC4B7ADA5} = {27B950A9-870C-47CA-A174-1A7D376F5AA9}
+		{5C10F1EA-40DC-45F4-89B6-B7F940E9187C} = {FEB9C6F3-403A-40F5-B9CC-9CF294B1338B}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {42358CED-9CE8-4A09-8B31-9444341084CF}
