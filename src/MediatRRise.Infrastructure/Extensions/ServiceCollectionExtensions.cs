@@ -10,18 +10,26 @@ namespace MediatRRise.Infrastructure.Extensions;
 public static class ServiceCollectionExtensions
 {
     /// <summary>
-    /// Registers IMediator and all handlers found in the given assemblies.
+    /// Original AddMediator with marker type(s).
     /// </summary>
-    /// <param name="services">The IServiceCollection instance.</param>
-    /// <param name="markerTypes">Any type within the target assemblies (used to scan handlers).</param>
-    /// <returns>The same IServiceCollection instance.</returns>
     public static IServiceCollection AddMediator(this IServiceCollection services, params Type[] markerTypes)
     {
-        services.AddSingleton<IMediator, Mediator>();
-
         var assemblies = markerTypes.Select(t => t.Assembly).Distinct().ToArray();
 
-        foreach (var assembly in assemblies)
+        return services.AddMediator(cfg => cfg.RegisterServicesFromAssemblies(assemblies));
+    }
+
+    /// <summary>
+    /// New overload to support MediatR-style registration from assemblies.
+    /// </summary>
+    public static IServiceCollection AddMediator(this IServiceCollection services, Action<MediatRRiseOptions> optionsBuilder)
+    {
+        var options = new MediatRRiseOptions();
+        optionsBuilder.Invoke(options);
+
+        services.AddSingleton<IMediator, Mediator>();
+
+        foreach (var assembly in options.Assemblies.Distinct())
         {
             var types = assembly.GetTypes();
 
@@ -30,15 +38,13 @@ public static class ServiceCollectionExtensions
                 .SelectMany(t => t.GetInterfaces()
                     .Where(i => i.IsGenericType && (
                         i.GetGenericTypeDefinition() == typeof(IRequestHandler<,>) ||
-                        i.GetGenericTypeDefinition() == typeof(IRequestHandler<>)
-                    ))
+                        i.GetGenericTypeDefinition() == typeof(IRequestHandler<>)))
                     .Select(i => new { Service = i, Implementation = t }));
 
             var notificationHandlers = types
                 .Where(t => !t.IsAbstract && !t.IsInterface)
                 .SelectMany(t => t.GetInterfaces()
-                    .Where(i => i.IsGenericType &&
-                                i.GetGenericTypeDefinition() == typeof(INotificationHandler<>))
+                    .Where(i => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(INotificationHandler<>))
                     .Select(i => new { Service = i, Implementation = t }));
 
             foreach (var handler in requestHandlers.Concat(notificationHandlers))
