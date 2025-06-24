@@ -36,4 +36,17 @@ public class MediatorTests
         // Assert
         Assert.Equal("Pong: Hello, MediatR Rise!", result);
     }
+
+    [Fact]
+    public async Task Send_SameQueryTwice_UsesCachedHandler()
+    {
+        var query1 = new PingQuery("1");
+        var query2 = new PingQuery("2");
+
+        var result1 = await _mediator.Send(query1);
+        var result2 = await _mediator.Send(query2);
+
+        Assert.Equal("Pong: 1", result1);
+        Assert.Equal("Pong: 2", result2);
+    }
 }
