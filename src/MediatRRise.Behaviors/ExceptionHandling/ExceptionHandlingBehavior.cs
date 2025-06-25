@@ -21,6 +21,15 @@ public class ExceptionHandlingBehavior<TRequest, TResponse>(ILogger<ExceptionHan
         {
             return await next();
         }
+        catch (FluentValidation.ValidationException ex)
+        {
+            var requestName = typeof(TRequest).Name;
+            var errorMessages = string.Join(" | ", ex.Errors.Select(e => $"{e.PropertyName}: {e.ErrorMessage}"));
+
+            logger.LogWarning(ex, "[ValidationException] Validation failed for {RequestName}: {Errors}", requestName, errorMessages);
+
+            throw new InvalidOperationException($"Validation failed: {errorMessages}");
+        }
         catch (Exception ex)
         {
             var requestName = typeof(TRequest).Name;

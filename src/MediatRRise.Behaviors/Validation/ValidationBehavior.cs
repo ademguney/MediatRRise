@@ -20,29 +20,26 @@ public class ValidationBehavior<TRequest, TResponse>(IEnumerable<IValidator<TReq
     /// <returns></returns>
     /// <exception cref="ValidationException"></exception>
     public async Task<TResponse> Handle(
-        TRequest request,
-        RequestHandlerDelegate<TResponse> next,
-        CancellationToken cancellationToken)
+       TRequest request,
+       RequestHandlerDelegate<TResponse> next,
+       CancellationToken cancellationToken)
     {
-        if (validators.Any())
-        {
-            var context = new ValidationContext<TRequest>(request);
+        if (!validators.Any())
+            return await next();
 
-            var validationResults = await Task.WhenAll(
-                validators.Select(v => v.ValidateAsync(context, cancellationToken))
-            );
+        var context = new ValidationContext<object>(request);
 
-            var failures = validationResults
-                .SelectMany(result => result.Errors)
-                .Where(f => f != null)
-                .ToList();
+        var validationResults = await Task.WhenAll(
+            validators.Select(v => v.ValidateAsync(context, cancellationToken))
+        );
 
-            if (failures.Count != 0)
-            {
-                var errorMessage = string.Join(Environment.NewLine, failures.Select(f => $"{f.PropertyName}: {f.ErrorMessage}"));
-                throw new ValidationException(errorMessage);
-            }
-        }
+        var failures = validationResults
+            .SelectMany(r => r.Errors)
+            .Where(f => f is not null)
+            .ToList();
+
+        if (failures.Count > 0)
+            throw new ValidationException(failures);
 
         return await next();
     }

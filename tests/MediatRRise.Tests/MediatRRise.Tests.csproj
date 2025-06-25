@@ -22,9 +22,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\MediatRRise.Behaviors\MediatRRise.Behaviors.csproj" />
     <ProjectReference Include="..\..\src\MediatRRise.Core\MediatRRise.Core.csproj" />
     <ProjectReference Include="..\..\src\MediatRRise.Infrastructure\MediatRRise.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Unit\" />
   </ItemGroup>
 
 </Project>
