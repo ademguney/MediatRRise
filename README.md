@@ -12,8 +12,7 @@ Whether you're building a modular monolith, implementing CQRS, or introducing do
 - ✅ `IRequest<T>` / `IRequestHandler<T, R>` based command & query handling
 - ✅ `INotification` & multi-handler pub-sub pattern
 - ✅ Customizable pipeline with `IPipelineBehavior<T, R>`
-- ✅ Built-in behaviors like validation, logging, retry (optional)
-- ✅ Clean DI integration: `services.AddMediatRRise(...)`
+- ✅ Clean DI integration: services.AddMediator(...)
 - ✅ High testability with mockable abstractions
 - ✅ NuGet-friendly, open-source, MIT licensed
 
@@ -43,28 +42,6 @@ dotnet add package MediatRRise
 │       ├──📄 ICacheableRequest.cs
 │       ├──📄 ICacheService.cs
 │       └──📄 RequestHandlerDelegate.cs
-
-├──📁 Behaviors/
-│   ├──📁 Caching/
-│   │   └──🧩 CachingBehavior.cs
-│   ├──📁 Logging/
-│   │   └──🧩 LoggingBehavior.cs
-│   ├──📁 Retry/
-│   │   └──🧩 RetryBehavior.cs
-│   ├──📁 Validation/
-│   │   └──🧩 ValidationBehavior.cs
-│   ├──📁 Performance/
-│   │   └──🧩 PerformanceBehavior.cs
-│   ├──📁 ExceptionHandling/
-│   │   └──🧩 ExceptionHandlingBehavior.cs
-│   └──📁 Extensions/
-│       ├──🧩 AddCachingBehaviorExtensions.cs
-│       ├──🧩 AddLoggingBehaviorExtensions.cs
-│       ├──🧩 AddRetryBehaviorExtensions.cs
-│       ├──🧩 AddValidationBehaviorExtensions.cs
-│       ├──🧩 AddPerformanceBehaviorExtensions.cs
-│       ├──🧩 AddExceptionHandlingBehaviorExtensions.cs
-│       └──🧩 AddMediatRRisePipelineExtensions.cs
 
 ├──📁 Infrastructure/
 │   ├── Implemantation/
@@ -126,110 +103,13 @@ services.AddMediator(cfg =>
     cfg.RegisterServicesFromAssemblies(Assembly.GetExecutingAssembly());
 });
 ```
-### 🔧 Adding Pipeline Behaviors
-MediatRRise comes with built-in pipeline behaviors such as:
+### ⚡️ Adding Pipeline Behaviors
+MediatRRise supports IPipelineBehavior<TRequest, TResponse> out of the box.
+You can define and register your own custom behaviors (such as validation, logging, caching, etc.) in your project.
 
-- Validation
-- Logging
-- Exception Handling
-- Retry
-- Performance Monitoring
-
-Caching
-✅ Option 1: Register All Behaviors at Once
-You can register them individually or all at once:
-```csharp
-using MediatRRise.Behaviors.Extensions;
-
-services.AddMediatRRisePipeline();
-```
-This will register all available behaviors in the recommended order:
-
-- LoggingBehavior  
-- ExceptionHandlingBehavior  
-- ValidationBehavior  
-- RetryBehavior  
-- PerformanceBehavior  
-- CachingBehavior
-
-### ⚙️ Option 2: Register Behaviors Individually
-If you prefer to have more control, you can add only the behaviors you need:
+Example — Validation Behavior Registration:
 
 ```csharp
-using MediatRRise.Behaviors.Extensions;
-
-services
-    .AddLoggingBehavior()
-    .AddExceptionHandlingBehavior()
-    .AddValidationBehavior()
-    .AddRetryBehavior()
-    .AddPerformanceBehavior()
-    .AddCachingBehavior();
-
+services.AddScoped(typeof(IPipelineBehavior<,>), typeof(MyCustomValidationBehavior<,>));
 ```
 
-### ⚙️ Available Pipeline Behaviors
-MediatRRise includes a set of optional but powerful behaviors. You can plug them into the MediatR pipeline to handle cross-cutting concerns in a clean and modular way.
-
-#### 🔍 ValidationBehavior
-Validates incoming requests using FluentValidation before they are handled.
-
-```csharp
-services.AddValidationBehavior();
-```
-To enable validation, register your validators like this:
-```csharp
-services.AddValidatorsFromAssembly(Assembly.GetExecutingAssembly());
-```
-#### 📄 LoggingBehaviorr
-Logs when a request is being handled and when it completes.
-```csharp
-services.AddLoggingBehavior();
-```
-#### 🛡️ ExceptionHandlingBehavior
-Catches and logs unhandled exceptions during request handling. Prevents your app from crashing due to unexpected failures.
-```csharp
-services.AddExceptionHandlingBehavior();
-```
-#### 🔁 RetryBehavior
-Retries transient errors (like timeouts or HTTP failures) automatically. Default is 3 retries with 200ms delay.
-
-```csharp
-services.AddRetryBehavior();
-```
-You can customize retry logic by editing RetryBehavior<TRequest, TResponse> directly.
-
-#### ⏱️ PerformanceBehavior
-Measures how long each request takes. Logs a warning if it exceeds a certain threshold (default: 500ms).
-
-
-```csharp
-services.AddPerformanceBehavior();
-```
-
-#### 🧠 CachingBehavior
-Caches the result of requests that implement ICacheableRequest<TResponse>. Requires an ICacheService implementation.
-
-```csharp
-services.AddCachingBehavior();
-
-```
-Define your query like this:
-```csharp
-public class GetProductByIdQuery : ICacheableRequest<ProductDto>
-{
-    public Guid Id { get; init; }
-
-    public string CacheKey => $"product:{Id}";
-    public TimeSpan Expiration => TimeSpan.FromMinutes(10);
-}
-```
-
-#### 🔗 Tip: Register All Behaviors at Once
-You can register all behaviors with a single call:
-
-
-```csharp
-services.AddMediatRRisePipeline();
-
-```
